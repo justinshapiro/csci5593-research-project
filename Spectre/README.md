@@ -1,5 +1,5 @@
 # Spectre Attack
 
-**Run From Command Line -**
+**Compile From Command Line -**
 
 $ gcc -march=native Spectre.c
