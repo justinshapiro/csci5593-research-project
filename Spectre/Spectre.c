@@ -15,7 +15,7 @@ uint8_t buffer[10] = {0,1,2,3,4,5,6,7,8,9};
 char *secret = "Some Secret Value";
 uint8_t array[256*4096];
 
-// Sandbox Function, restricted area for holding out secret
+// Sandbox Function, restricted area for holding the secret
 uint8_t restrictedAccess(size_t x) {
     if (x < buffer_size) {
         return buffer[x];
@@ -86,7 +86,7 @@ int main() {
     int len = (int)strlen(secret); // calculates number of chars in the secret
     int scores[256];
     char sourced_secret[len-1]; // create a char array of the secret that we have sourced via the attack
-    // the -1 eliminates the \0 terminator found at the end of char arrays in c
+                                // the -1 eliminates the \0 terminator found at the end of char arrays in c
     j = 0;
     // Initialize ascii scores array to keeps track of hits
     while (--len >= 0) {
