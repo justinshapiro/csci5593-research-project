@@ -2,4 +2,4 @@
 
 **Run From Command Line -**
 
-$ gcc -march+native Spectre.c
+$ gcc -march=native Spectre.c
