@@ -47,7 +47,7 @@ int BN_mod_exp_mont(BIGNUM *rr, const BIGNUM *a, const BIGNUM *p, const BIGNUM *
     wstart = bits - 1;
 	
     // window bottom bit
-	wend = 0; 
+    wend = 0; 
 
     if (!BN_to_montgomery(r, BN_value_one(), mont,ctx))          // (gdb) 0x400000000007d4e2 
         goto err;                                                // (gdb) 0x400000000007d4f0 
