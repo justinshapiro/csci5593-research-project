@@ -13,6 +13,7 @@
 #include <emmintrin.h>
 #include <x86intrin.h>
 #include <string.h>
+#include <stdint.h>
 
 #define CACHE_HIT_THRESHOLD (80)
 #define DELTA 1024

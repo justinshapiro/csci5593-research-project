@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <emmintrin.h>
 #include <x86intrin.h>
+#include <stdint.h>
 
 uint8_t array[256*4096];
 
