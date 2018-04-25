@@ -35,60 +35,60 @@
 // modified version of bn_exp.c from OpenSSL 0.9.8g
 int BN_mod_exp_mont(BIGNUM *rr, const BIGNUM *a, const BIGNUM *p, const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *in_mont) {
 	
-	// ... code before this is not applicable
+    // ... code before this is not applicable
 	
-	// avoid multiplication when there is only a 1 in the buffer
-	start = 1; 
+    // avoid multiplication when there is only a 1 in the buffer
+    start = 1; 
 	
-	// window value
-	wvalue = 0; 
+    // window value
+    wvalue = 0; 
 	
-	// window top bit
-	wstart = bits - 1;
+    // window top bit
+    wstart = bits - 1;
 	
-	// window bottom bit
+    // window bottom bit
 	wend = 0; 
 
-	if (!BN_to_montgomery(r, BN_value_one(), mont,ctx))          // (gdb) 0x400000000007d4e2 
-		goto err;                                                // (gdb) 0x400000000007d4f0 
-	                                                             // 
-	for (;;) {                                                   // (gdb) 0x400000000007d4f1 
-		if (BN_is_bit_set(p, wstart) == 0) {                     // (gdb) 0x400000000007d4f2 :: r.cond.dptk.few 0x400000000007d5d0
-			if (!start) {
-				if (!BN_mod_mul_montgomery(r, r, r, mont, ctx)) 
-					goto err;
-			}		
+    if (!BN_to_montgomery(r, BN_value_one(), mont,ctx))          // (gdb) 0x400000000007d4e2 
+        goto err;                                                // (gdb) 0x400000000007d4f0 
+                                                                 // 
+    for (;;) {                                                   // (gdb) 0x400000000007d4f1 
+        if (BN_is_bit_set(p, wstart) == 0) {                     // (gdb) 0x400000000007d4f2 :: r.cond.dptk.few 0x400000000007d5d0
+            if (!start) {
+                if (!BN_mod_mul_montgomery(r, r, r, mont, ctx)) 
+                    goto err;
+            }		
 			
-			if (wstart == 0) 
-				break;
+            if (wstart == 0) 
+                break;
 			
-			wstart--;
-			continue;
-		}
+            wstart--;
+            continue;
+        }
 		
-		// wstart is on a 'set' bit, now scan forward to the end of the window
-		j = wstart;
-		wvalue = 1;
-		wend = 0;
-		for (i = 1; i < window; i++) {
-			if (wstart - i < 0) 
-				break;
+        // wstart is on a 'set' bit, now scan forward to the end of the window
+        j = wstart;
+        wvalue = 1;
+        wend = 0;
+        for (i = 1; i < window; i++) {
+            if (wstart - i < 0) 
+                break;
 			
-			if (BN_is_bit_set(p, wstart - i)) { // <-- this branch will also leak the private key
-				wvalue <<= (i - wend);
-				wvalue |= 1;
-				wend = i;
-			}
-		}
+            if (BN_is_bit_set(p, wstart - i)) { // <-- this branch will also leak the private key
+                wvalue <<= (i - wend);
+                wvalue |= 1;
+                wend = i;
+            }
+        }
 
-	// ... code in between is not applicable
+    // ... code in between is not applicable
 	
-	err:
-		if ((in_mont == NULL) && (mont != NULL)) 
-			BN_MONT_CTX_free(mont);
+    err:
+        if ((in_mont == NULL) && (mont != NULL)) 
+            BN_MONT_CTX_free(mont);
 		
-		BN_CTX_end(ctx);
-		bn_check_top(rr);
+        BN_CTX_end(ctx);
+        bn_check_top(rr);
 		
-	return(ret);
+    return(ret);
 }
