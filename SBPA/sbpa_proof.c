@@ -8,7 +8,7 @@
  *
  * A spy process can first fill the BTB with dummy branches
  * The spy process will measure the execution time of each branch and notice if any of its dummy branches has been evicted
- * An eviction of the spy process branch means a misprediction of the victim_process, meaning the conditional branch on L was taken
+ * An eviction of the spy process branch means a misprediction of the victim_process, meaning the conditional branch on D was taken
  *
  * A command line profiling tool like Pfmon can act as the spy process 
  * Using the GDB debugging tool, we can see the progam's address range
@@ -18,7 +18,7 @@
  * Simply run this simultaneously with the victim process:
  * pfmon --long-smpl-periods=1 --smpl-entries=100 -e BRANCH_EVENT --irange=0x4000000000000980-0x4000000000000990 -- ./sbpa_proof 10
  *
- * The pfmon output log from the above instruction will contain information that can be used to direcly obtain the private key (L):
+ * The pfmon output log from the above instruction will contain information that can be used to direcly obtain the private key (D):
  *
  * --- LOG START ---
  *
