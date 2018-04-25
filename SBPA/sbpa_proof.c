@@ -3,7 +3,7 @@
  * -------------------------
  *
  * SBPA is a side-channel attack that is shown to exploit the Branch Target Buffer (BTB)
- * Consider a "victim_process" like this one and imagine that L = 5 is the secret key to an ciphertext
+ * Consider a "victim_process" like this one and imagine that D = 5 is the secret key to an ciphertext
  * We see that this victim_process branches conditionally based on D, and mispredictions this branch will be reflected in the BTB
  *
  * A spy process can first fill the BTB with dummy branches
