@@ -76,7 +76,7 @@
  * This corresponds to the bit sequence:                       1111011110
  *
  * There are two zero bits at n = 4 and n = 10 in the reconstructed bit sequence
- * This means the condition j % L == 0 was satisfied when j = 5 and j = 10
+ * This means the condition j % D == 0 was satisfied when j = 5 and j = 10
  * 
  * So in the expression 5 % D == 0 and 10 % D == 0, D must equal 5
  *
