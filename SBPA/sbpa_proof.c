@@ -2,7 +2,7 @@
  * SBPA Proof-of-Concept
  * -------------------------
  *
- * SBPA is an attack that is shown to exploit the Branch Target Buffer (BTB)
+ * SBPA is a side-channel attack that is shown to exploit the Branch Target Buffer (BTB)
  * Consider a "victim_process" like this one and imagine that L = 5 is the secret key to an ciphertext
  * We see that this victim_process branches conditionally based on D, and mispredictions this branch will be reflected in the BTB
  *
@@ -86,19 +86,17 @@
 # define D 5 // "Secret Key"
   
 void victim_process(int n) {    // (gdb) 0x4000000000000980
-	int a, j;                   // (gdb) 0x4000000000000981
-	for (j = 1; j <= n; j++)    // (gdb) 0x4000000000000982
-		if (j % D == 0)         // (gdb) 0x40000000000009b0
-			a = 1;              // (gdb) 0x4000000000000990
+    int a, j;                   // (gdb) 0x4000000000000981
+    for (j = 1; j <= n; j++)    // (gdb) 0x4000000000000982
+        if (j % D == 0)         // (gdb) 0x40000000000009b0
+            a = 1;              // (gdb) 0x4000000000000990
 }
   
  int main(int arc, char *argv[]) {
-	 if (argc == 2) {
-		 // launch the vicim_process
-		victim_process(argv[1]);
-	 } else {
-		 return 1;
-	 }
-	 
+    if (argc == 2) {
+        // launch the vicim_process
+        victim_process(argv[1]);
+    } else {
+        return 1;
+    } 
  }
-
