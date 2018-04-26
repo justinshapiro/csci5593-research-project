@@ -80,7 +80,17 @@
  * 
  * So in the expression 5 % D == 0 and 10 % D == 0, D must equal 5
  *
- * This proves that SBPA works and we can use it to decrypt a 1024-bit RSA secret key, as
+ * This proves that SBPA works and we can use it to decrypt a 1024-bit RSA secret key
+ *
+ * Newer processors, however, only provide information about the number of branches taken or not taken, but not in such an order 
+ * That is, the BRANCH_EVENT flag is non-existent in Core 2 Duo and beyond using the BR_INST_RETIRED flag
+ * Nevertheless, we can use a trick to still determine if they were taken or not taken:
+ * The trick is to run victim_process(i) for i = 0 upto n
+ * If the number of branches increments by 2, the branch was not taken, otherwise if it incremented by 1 it was taken
+ *
+ * The command that peforms the trick for modern processors is:
+ * for i in $(seq 0 10) ; do pfmon -trigger-code-start=0x4000000000000980 --trigger-code-stop=0x4000000000000990 –e BR_INST_RETIRED:taken - ./sbpa_proof $i 
+ *
  */
 
 # define D 5 // "Secret Key"
